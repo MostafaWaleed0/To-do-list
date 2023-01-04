@@ -8,7 +8,12 @@ export default function ListItem({
   checkedNote,
 }) {
   const input = (
-    <input type="checkbox" onChange={checkedNote} checked={checked} />
+    <input
+      type="checkbox"
+      onChange={checkedNote}
+      checked={checked}
+      className="accent-[#e300be] h-6 w-6"
+    />
   );
 
   return (
