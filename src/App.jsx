@@ -1,4 +1,3 @@
-import "./output.css";
 import { useState } from "react";
 import ListItem from "./components/ListItem";
 import Button from "./components/Button";
