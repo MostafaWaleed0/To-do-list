@@ -22,13 +22,15 @@ export default function App() {
   const handleAddNote = (e) => {
     e.preventDefault();
     if (values.title.trim() !== "") {
-      notes.push({
-        id: Math.random().toString(36).substring(2, 10),
-        title: values.title,
-        description: values.description,
-        completed: values.completed,
-      });
-      setNotes(notes);
+      setNotes([
+        ...notes,
+        {
+          id: Math.random().toString(36).substring(2, 10),
+          title: values.title,
+          description: values.description,
+          completed: values.completed,
+        },
+      ]);
       setValues({ id: "", title: "", description: "", completed: false });
     }
   };
