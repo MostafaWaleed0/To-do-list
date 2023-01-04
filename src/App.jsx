@@ -48,23 +48,39 @@ export default function App() {
     <main className="grid bg-white min-h-screen">
       <div className="m-auto w-2/4">
         <div>
-          <input
-            className="border border-[#e300be] w-full h-full rounded p-2 mb-4"
-            type="text"
-            name="title"
-            value={values.title}
-            onChange={handleChange}
-          />
-          <textarea
-            className="border border-[#e300be] w-full h-full rounded p-2 mb-2"
-            type="text"
-            name="description"
-            value={values.description}
-            onChange={handleChange}
-          />
-          <Button onClick={handleAddNote}>add</Button>
+          <div>
+            <label htmlFor="title" className="sr-only">
+              Title
+            </label>
+            <input
+              className="border border-[#e300be] w-full h-full rounded p-2 mb-4"
+              id="title"
+              type="text"
+              name="title"
+              value={values.title}
+              onChange={handleChange}
+              autoComplete="off"
+            />
+          </div>
+          <div>
+            <label htmlFor="description" className="sr-only">
+              description
+            </label>
+            <textarea
+              className="border border-[#e300be] w-full h-full rounded p-2 mb-2"
+              id="description"
+              type="text"
+              name="description"
+              value={values.description}
+              onChange={handleChange}
+              autoComplete="off"
+            />
+          </div>
+          <Button onClick={handleAddNote} type="submit">
+            add
+          </Button>
         </div>
-        <ol role="list">
+        <ul role="list">
           {notes.map((note) => (
             <ListItem
               key={note.id}
@@ -75,7 +91,7 @@ export default function App() {
               checkedNote={() => handleToggleNote(note.id)}
             />
           ))}
-        </ol>
+        </ul>
       </div>
     </main>
   );
