@@ -80,7 +80,10 @@ export default function App() {
             add
           </Button>
         </div>
-        <ul role="list">
+        <h2 class="text-xl mt-10" id="list-heading">
+          {notes.length} {notes.length > 1 ? "tasks" : "task"}
+        </h2>
+        <ul role="list" aria-labelledby="list-heading">
           {notes.map((note) => (
             <ListItem
               key={note.id}
