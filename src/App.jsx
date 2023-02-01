@@ -34,15 +34,21 @@ export default function App() {
     }
   };
 
-  const handleDeleteNote = (id) =>
-    setNotes(notes.filter((note) => note.id !== id));
+  const handleDeleteNote = (id) => {
+    return () => {
+      setNotes(notes.filter((note) => note.id !== id));
+    };
+  };
 
-  const handleToggleNote = (id) =>
-    setNotes((notes) =>
-      notes.map((note) =>
-        note.id === id ? { ...note, completed: !note.completed } : note
-      )
-    );
+  const handleToggleNote = (id) => {
+    return () => {
+      setNotes((notes) =>
+        notes.map((note) =>
+          note.id === id ? { ...note, completed: !note.completed } : note
+        )
+      );
+    };
+  };
 
   return (
     <main className="grid bg-white min-h-screen">
@@ -89,9 +95,9 @@ export default function App() {
               key={note.id}
               title={note.title}
               description={note.description}
-              deleteNote={() => handleDeleteNote(note.id)}
+              deleteNote={handleDeleteNote(note.id)}
               checked={note.completed}
-              checkedNote={() => handleToggleNote(note.id)}
+              checkedNote={handleToggleNote(note.id)}
             />
           ))}
         </ul>
