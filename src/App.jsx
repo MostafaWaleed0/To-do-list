@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import ListItem from "./components/ListItem";
 import Button from "./components/Button";
 import useLocalStorage from "./hooks/useLocalStorage";
@@ -18,31 +18,55 @@ export default function App() {
       [e.target.name]: e.target.value,
     }));
 
-  const handleAddNote = (e) => {
-    e.preventDefault();
-    if (values.title.trim() !== "") {
-      setNotes([
-        ...notes,
-        {
-          id: Math.random().toString(36).substring(2, 10),
-          title: values.title,
-          description: values.description,
-          completed: values.completed,
-        },
-      ]);
-      setValues({ id: "", title: "", description: "", completed: false });
-    }
-  };
+  const resetValues = useCallback(() => {
+    setValues({ id: "", title: "", description: "", completed: false });
+  }, []);
 
-  const handleDeleteNote = (id) =>
-    setNotes(notes.filter((note) => note.id !== id));
+  const handleAddNote = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (values.title.trim() !== "") {
+        setNotes([
+          ...notes,
+          {
+            id: Math.random().toString(36).substring(2, 10),
+            title: values.title,
+            description: values.description,
+            completed: values.completed,
+          },
+        ]);
+        resetValues();
+      }
+    },
+    [
+      values.title,
+      values.description,
+      values.completed,
+      setNotes,
+      notes,
+      resetValues,
+    ]
+  );
 
-  const handleToggleNote = (id) =>
-    setNotes((notes) =>
-      notes.map((note) =>
-        note.id === id ? { ...note, completed: !note.completed } : note
-      )
-    );
+  const handleDeleteNote = useCallback(
+    (id) => {
+      return () => setNotes(notes.filter((note) => note.id !== id));
+    },
+    [notes, setNotes]
+  );
+
+  const handleToggleNote = useCallback(
+    (id) => {
+      return () => {
+        setNotes((notes) =>
+          notes.map((note) =>
+            note.id === id ? { ...note, completed: !note.completed } : note
+          )
+        );
+      };
+    },
+    [setNotes]
+  );
 
   return (
     <main className="grid bg-white min-h-screen">
@@ -80,7 +104,7 @@ export default function App() {
             add
           </Button>
         </div>
-        <h2 class="text-xl mt-10" id="list-heading">
+        <h2 className="text-xl mt-10" id="list-heading">
           {notes.length} {notes.length > 1 ? "tasks" : "task"}
         </h2>
         <ul role="list" aria-labelledby="list-heading">
@@ -89,9 +113,9 @@ export default function App() {
               key={note.id}
               title={note.title}
               description={note.description}
-              deleteNote={() => handleDeleteNote(note.id)}
+              deleteNote={handleDeleteNote(note.id)}
               checked={note.completed}
-              checkedNote={() => handleToggleNote(note.id)}
+              checkedNote={handleToggleNote(note.id)}
             />
           ))}
         </ul>
