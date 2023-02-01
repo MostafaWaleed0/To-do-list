@@ -18,6 +18,10 @@ export default function App() {
       [e.target.name]: e.target.value,
     }));
 
+  const resetValues = useCallback(() => {
+    setValues({ id: "", title: "", description: "", completed: false });
+  }, []);
+
   const handleAddNote = useCallback(
     (e) => {
       e.preventDefault();
@@ -31,10 +35,17 @@ export default function App() {
             completed: values.completed,
           },
         ]);
-        setValues({ id: "", title: "", description: "", completed: false });
+        resetValues();
       }
     },
-    [notes, setNotes, values.completed, values.description, values.title]
+    [
+      values.title,
+      values.description,
+      values.completed,
+      setNotes,
+      notes,
+      resetValues,
+    ]
   );
 
   const handleDeleteNote = useCallback(
