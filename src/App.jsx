@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import ListItem from "./components/ListItem";
 import Button from "./components/Button";
 import useLocalStorage from "./hooks/useLocalStorage";
@@ -18,37 +18,44 @@ export default function App() {
       [e.target.name]: e.target.value,
     }));
 
-  const handleAddNote = (e) => {
-    e.preventDefault();
-    if (values.title.trim() !== "") {
-      setNotes([
-        ...notes,
-        {
-          id: Math.random().toString(36).substring(2, 10),
-          title: values.title,
-          description: values.description,
-          completed: values.completed,
-        },
-      ]);
-      setValues({ id: "", title: "", description: "", completed: false });
-    }
-  };
+  const handleAddNote = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (values.title.trim() !== "") {
+        setNotes([
+          ...notes,
+          {
+            id: Math.random().toString(36).substring(2, 10),
+            title: values.title,
+            description: values.description,
+            completed: values.completed,
+          },
+        ]);
+        setValues({ id: "", title: "", description: "", completed: false });
+      }
+    },
+    [notes, setNotes, values.completed, values.description, values.title]
+  );
 
-  const handleDeleteNote = (id) => {
-    return () => {
-      setNotes(notes.filter((note) => note.id !== id));
-    };
-  };
+  const handleDeleteNote = useCallback(
+    (id) => {
+      return () => setNotes(notes.filter((note) => note.id !== id));
+    },
+    [notes, setNotes]
+  );
 
-  const handleToggleNote = (id) => {
-    return () => {
-      setNotes((notes) =>
-        notes.map((note) =>
-          note.id === id ? { ...note, completed: !note.completed } : note
-        )
-      );
-    };
-  };
+  const handleToggleNote = useCallback(
+    (id) => {
+      return () => {
+        setNotes((notes) =>
+          notes.map((note) =>
+            note.id === id ? { ...note, completed: !note.completed } : note
+          )
+        );
+      };
+    },
+    [setNotes]
+  );
 
   return (
     <main className="grid bg-white min-h-screen">
